@@ -6,9 +6,11 @@ TiddlPy
 @author: Neil Griffin
 """
 
+import html
 import re
 import shutil
-from time import strftime, gmtime
+from time import gmtime, strftime
+
 from bs4 import BeautifulSoup
 
 #validtypes = ['text/vnd.tiddlywiki', 'text/plain']
@@ -161,7 +163,7 @@ def wikiedit(wiki, tiddlers, deletelist, modi=u'python', datestamp=True):
                     continue
                 fho.write(b' ' + bytes(key, encoding)
                           + b'="' + bytes(tiddler[key], encoding) + b'"')
-            fho.write('>\n<pre>{}</pre>\n</div>\n'.format(tiddler['text']).encode(encoding))
+            fho.write('>\n<pre>{}</pre>\n</div>\n'.format(html.escape(tiddler['text'])).encode(encoding))
             writtenlist.append(tiddler['title'])
 
         fho.write(line)  # delayed write of </div> line at end of storearea
