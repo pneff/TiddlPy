@@ -82,7 +82,7 @@ def searchtiddlers(wiki, srchtxt, fieldlist, caseinsensitive=True):
     return matchlist
 
 
-def wikiedit(wiki, tiddlers, deletelist, modi=u'python'):
+def wikiedit(wiki, tiddlers, deletelist, modi=u'python', datestamp=True):
     """
     wiki is the wikifilename.
 
@@ -118,7 +118,8 @@ def wikiedit(wiki, tiddlers, deletelist, modi=u'python'):
                 if len(re.findall(b'title=".*?"', line)) < 1:
                     print('error - no title in line: ', line)
                     raise SystemError
-                title = (re.findall(b'title=".*?"', line)[0][7:-1]).decode(encoding)
+                title = (
+                    re.findall(b'title=".*?"', line)[0][7:-1]).decode(encoding)
                 if len(title) <= 0:
                     print('title not found in tiddler', line)
                     raise SystemError
@@ -147,11 +148,13 @@ def wikiedit(wiki, tiddlers, deletelist, modi=u'python'):
 
         for tiddler in tiddlers:
             tiddler['modifier'] = modi
-            tiddler['modified'] = strftime('%Y%m%d%H%M%S', gmtime())
-            if tiddler['title'] not in deletedlist:
-                tiddler['created'] = tiddler['modified']
-            elif tiddler['title'] in created:
-                tiddler['created'] = created[tiddler['title']].decode(encoding)
+            if datestamp or not tiddler.get('modified'):
+                tiddler['modified'] = strftime('%Y%m%d%H%M%S', gmtime())
+            if datestamp or not tiddler.get('created'):
+                if tiddler['title'] not in deletedlist:
+                    tiddler['created'] = tiddler['modified']
+                elif tiddler['title'] in created:
+                    tiddler['created'] = created[tiddler['title']].decode(encoding)
             fho.write(b'<div')
             for key in tiddler:
                 if key == 'text':
