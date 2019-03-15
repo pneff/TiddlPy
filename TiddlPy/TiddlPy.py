@@ -125,6 +125,7 @@ def wikiedit(wiki, tiddlers, deletelist, modi=u'python', datestamp=True):
                 if len(title) <= 0:
                     print('title not found in tiddler', line)
                     raise SystemError
+                title = html.unescape(title)
                 if title not in deletelist and title not in savelist:
                     fho.write(line)
                     continue
