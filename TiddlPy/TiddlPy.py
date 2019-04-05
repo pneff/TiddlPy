@@ -163,7 +163,7 @@ def wikiedit(wiki, tiddlers, deletelist, modi=u'python', datestamp=True):
                 if key == 'text':
                     continue
                 fho.write(b' ' + bytes(key, encoding)
-                          + b'="' + bytes(tiddler[key], encoding) + b'"')
+                          + b'="' + bytes(html.escape(tiddler[key]), encoding) + b'"')
             fho.write('>\n<pre>{}</pre>\n</div>\n'.format(html.escape(tiddler['text'])).encode(encoding))
             writtenlist.append(tiddler['title'])
 
